@@ -1,0 +1,67 @@
+entity DocumentTemplate {
+	enabled Boolean,
+	name String required maxlength(100),
+	description String maxlength(200),
+	condition TextBlob,
+	createdBy String maxlength(200),
+	lastModifiedBy String maxlength(200),
+	createdDate LocalDate,
+	lastModifiedDate LocalDate
+}
+
+entity ParsingRule {
+	enabled Boolean,
+	name String required maxlength(100),
+	actions TextBlob,
+	createdBy String maxlength(200),
+	lastModifiedBy String maxlength(200),
+	createdDate LocalDate,
+	lastModifiedDate LocalDate
+}
+
+entity Attachment {
+	storageType StorageType required,
+	fileLocation String required maxlength(600),
+	fileName String maxlength(500),
+	description String maxlength(500),
+	fileSize Long,
+	mimeType String maxlength(30),
+	attachmentType AttachmentType required,
+	attachmentStatus AttachmentStatus required,
+	properties TextBlob,
+	sourceContent TextBlob,
+	extractedData TextBlob
+}
+
+enum AttachmentType {
+	PORTFOLIO_STATEMENT, HOLDING_INPUT
+}
+
+enum AttachmentStatus {
+	VALIDATED, FAILED_VALIDATION, APPENDED, OVERWRITTEN, FAILED_ADDITION, DELETED, FAILED_DELETION	
+}
+
+// Relationships
+relationship OneToMany {
+  DocumentTemplate{attachment} to Attachment,
+  DocumentTemplate{parsingRules} to ParsingRules
+}
+
+
+// defining multiple oneToOne relationships
+
+
+// Set pagination options
+paginate DocumentTemplate with pagination
+paginate ParsingRule with pagination
+paginate Attachment with pagination
+
+
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+
+// Set an angular suffix
+//angularSuffix * with mySuffix
+
